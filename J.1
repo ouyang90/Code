@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<script language="JavaScript" type="text/JavaScript">
+  var ns=function()
+    {
+       return "led";
+    };
+    console.log(ns());
+  function JsonToXml(jsonObj,rootNode){
+      if(Object.prototype.toString.call(jsonObj) !== '[object Object]') return;
+      var xmldoc=new Array();
+      xmldoc.push('');
+      if(rootNode) xmldoc.push('<'+rootNode+'>');
+      function toXml(jsonObj){
+          for(var m in jsonObj){
+              if(Object.prototype.toString.call(jsonObj[m]) === '[object Array]'){
+                  xmldoc.push('<'+m+'>');
+                  for(var i=0,len=jsonObj[m].length;i<len;i++){
+                      toXml(jsonObj[m][i]);
+                  }
+                  xmldoc.push('');
+              }
+              else if(Object.prototype.toString.call(jsonObj[m]) === '[object Object]'){
+                  xmldoc.push('<'+m+'>');
+                  toXml(jsonObj[m]);
+                  xmldoc.push('');
+              }else{
+                  xmldoc.push('<'+m+'>'+jsonObj[m]+'');
+              }
+          }
+      }
+      function txtToXML(txt){
+          if(txt){
+              try{
+                  return new DOMParser().parseFromString(txt, "text/xml");
+              }catch(e){
+                  var xmlDom=new ActiveXObject("Microsoft.XMLDOM");
+                  xmlDom.loadXML(txt);
+                  return xmlDom;
+              }
+          }
+      }
+      toXml(jsonObj);
+      if(rootNode) xmldoc.push('');
+      return txtToXML(xmldoc.join(''));
+  }
+  var jsonstr={changeadminpwd:{accountname:"root",oldpwd:"rootroot",newpwd:"rootroot"}};
+  var xml=JsonToXml(jsonstr);
+    console.log(xml.toString());//双击鼠标滚动屏幕的代码
+  var currentpos,timer;
+  function initialize()
+  {
+      timer=setInterval(scrollwindow(),30);
+  }
+  function sc()
+  {
+      clearInterval(timer);
+  }
+  function scrollwindow()
+  {
+      currentpos=document.body.scrollTop;
+      window.scroll(0,++currentpos);
+      if (currentpos !=document.body.scrollTop) sc();
+  }
+  document.onmousedown=sc
+  document.ondblclick=initialize
+</script>
+<div style="height: 2000px;">
+&nbsp;
+</div>
+</body>
+</html>
